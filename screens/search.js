@@ -41,8 +41,14 @@ export default class Search extends React.Component{
     }
     searchTransactions=async(text)=>{
         var enteredText=text.split("");
+        var text=text.toUpperCase();
+        this.setState({
+            allTransactions:[]
+        })
+        console.log(enteredText);
         if(enteredText[0].toUpperCase()==="B"){
-            const ref=await db.collection("transaction").where("bookID", "==", text).get();
+            console.log("inside serchTransactions B");
+            const ref=await db.collection("transactions").where("bookID", "==", text).get();
             ref.docs.map(doc=>{
                 this.setState({
                     allTransactions:[...this.state.allTransactions,doc.data()],
@@ -50,7 +56,8 @@ export default class Search extends React.Component{
                 })
             })
         }else if(enteredText[0].toUpperCase()==="S"){
-            const ref=await db.collection("transaction").where("studentID", "==", text).get();
+            console.log("inside serchTransactions S")
+            const ref=await db.collection("transactions").where("studentID", "==", text).get();
             ref.docs.map(doc=>{
                 this.setState({
                     allTransactions:[...this.state.allTransactions,doc.data()],
@@ -75,7 +82,7 @@ export default class Search extends React.Component{
             </ScrollView>*/
             <View style={styles.container}>
                 <View style={styles.searchBar}> 
-                    <TextInput style={styles.bar} placeholder="Enter Book/Student ID" onChangeText={text=>{this.setState({search:text})}} value={this.state.search}> </TextInput>
+                    <TextInput style={styles.bar} placeholder="Enter Book/Student ID" onChangeText={text=>{this.setState({search:text})}}> </TextInput>
                     <TouchableOpacity style={styles.searchButton} onPress={()=>{this.searchTransactions(this.state.search)}}>
                         <Text> Search </Text>
                     </TouchableOpacity>
@@ -94,3 +101,32 @@ export default class Search extends React.Component{
         )
     }
 }
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      marginTop: 20
+    },
+    searchBar:{
+      flexDirection:'row',
+      height:40,
+      width:'auto',
+      borderWidth:0.5,
+      alignItems:'center',
+      backgroundColor:'grey',
+  
+    },
+    bar:{
+      borderWidth:2,
+      height:30,
+      width:300,
+      paddingLeft:10,
+    },
+    searchButton:{
+      borderWidth:1,
+      height:30,
+      width:50,
+      alignItems:'center',
+      justifyContent:'center',
+      backgroundColor:'green'
+    }
+  })
